@@ -1,15 +1,36 @@
 package com.example.biblioraapp
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class ViewModelBook : ViewModel() {
-    // Creating a list of books as MutableStateFlow
+
+
     private val _books = MutableStateFlow<List<Book>>(emptyList())
     val books: StateFlow<List<Book>> = _books
 
+
+  /*  init {
+        fetchBooks("kotlin")
+    }
+
+    private fun fetchBooks(query: String) {
+        // Launch coroutine to fetch books
+        viewModelScope.launch {
+            try {
+
+                val response: BookResponse = RetrofitInstance.api.searchBooks(query)
+                _books.value = response.docs
+            } catch (e: Exception) {
+                Log.e("BookViewModel", "Error fetching books", e)
+            }
+        }
+    }*/
     init {
         _books.value = listOf(
             Book(1,"Dune", 1968,  "One of the pivotal works of literary science fiction, Frank Herbert’s sand-blasted epic details the internecine battles for control of the desert planet Arrakis and its precious resource, \'spice\'."),

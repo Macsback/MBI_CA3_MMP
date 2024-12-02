@@ -63,15 +63,16 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
 
-
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
-
-
     implementation (libs.gson)
 
     implementation (libs.kotlinx.coroutines.android)
 
+
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+
+    implementation (libs.gson.v288)
+    implementation (libs.kotlinx.coroutines.android.v152)
 
 
     testImplementation(libs.junit)
