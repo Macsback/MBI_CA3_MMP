@@ -25,6 +25,7 @@ import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +38,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+
 
 import com.example.biblioraapp.ui.theme.BiblioraAppTheme
 
@@ -56,23 +62,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Main() {
+fun Main(viewModel: ViewModelBook = viewModel()) {
 
 
 
-    val booksList = listOf(
-        Book("Dune", 1968,  "One of the pivotal works of literary science fiction, Frank Herbert’s sand-blasted epic details the internecine battles for control of the desert planet Arrakis and its precious resource, \'spice\'."),
-        Book("Babel", 2022,  "One of the leading lights in the visceral grimdark fantasy genre, Kuang\'s stunningly wrought novel is a compulsive dystopia about the power of language and the evils of authoritarianism, represented by the looming titular tower of translation."),
-        Book("Percy Jackson", 2005,  "The first adventure for Percy Jackson sets the reluctant hero a ten-day deadline to find the true snatcher of Zeus\' legendary lightning bolt in Riordan\'s page-turning, myth-packed tale."),
-        Book("Lord of the Rings", 1988, "The first part of Tolkien's genre-defining masterpiece introduces arguably the most famous quest in fiction, as Frodo and his comrades set off to destroy the One Ring."),
-        Book("A Scatter of Light", 2023, "Scatter of Light is a companion novel to the National Book Awards winner and New York Times bestseller Last Night at the Telegraph Club, and is about how the threads of family, inspiration, art, and identity are woven across generations."),
-        Book("Mistborn #1", 2006, "Kickstarting the Mistborn series in stunning style, Sanderson's wildly entertaining fantasy heist sees a motley assortment of criminals attempt to overthrow an all-powerful tyrant."),
-        Book("The Witcher", 1986, "Introducing Geralt the Witcher - revered and hated - who holds the line against the monsters plaguing humanity in the bestselling series that inspired the Witcher video games and a major Netflix show."),
-        Book("The Blighted Stars", 2023, "When a spy and her mortal enemy crash-land on a dying planet, she must figure out how to survive long enough to uncover the deadly, galaxy-spanning conspiracy that landed them there. The Blighted Stars is the first book in an epic new space-opera trilogy from the author of the Philip K. Dick-nominated Velocity Weapon."),
-        Book("Intermezzo", 2024, "Two brothers navigate the turmoil and joy of love after the passing of their father in this breathtaking novel from the hugely acclaimed author of Normal People and Conversations With Friends."),
-        Book("Starter Villain", 2023, "A hiss-terical story about the (un)luckiest nepo-baby of all time, Starter Villain follows an everyman who inherits his uncle's supervillain empire."),
-
-        )
+    val booksList by viewModel.books.collectAsState()
 
     LazyColumn(modifier = Modifier.padding(16.dp)) {
         items(booksList) { book ->
