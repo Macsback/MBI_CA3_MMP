@@ -80,6 +80,7 @@ class MainActivity : ComponentActivity() {
 fun Main(viewModel: ViewModelBook = viewModel()) {
 
     val navController = rememberNavController()
+
     NavHost(navController = navController, startDestination = "bookList") {
         composable("bookList") {
             BookListScreen(navController = navController)
@@ -123,13 +124,16 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
+
+
             }
             Column(modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,  // Center the text
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center)
                  {
+
                 Image(
-                    painter = painterResource(R.drawable.dune),
+                    painter = painterResource(book.imageResourceId),
                     contentDescription = "Dune",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -148,10 +152,14 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
 @Composable
 fun BookListScreen(navController: NavController, viewModel: ViewModelBook = viewModel()) {
     val booksList by viewModel.books.collectAsState()
+    Column( horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center) {
+        Text(text = "Your Books", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.padding(top=20.dp))
+        LazyColumn(modifier = Modifier.padding(16.dp)) {
 
-    LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items(booksList) { book ->
-            BookCard(book = book, navController = navController)
+            items(booksList) { book ->
+                BookCard(book = book, navController = navController)
+            }
         }
     }
 }
@@ -193,7 +201,7 @@ fun BookCard(book: Book, navController: NavController) {
                     )
             ) {
             Image(
-                painter = painterResource(R.drawable.dune),
+                painter = painterResource(book.imageResourceId),
                 contentDescription = "Dune",
                 modifier = Modifier
                     .fillMaxWidth()
