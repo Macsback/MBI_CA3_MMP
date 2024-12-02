@@ -1,5 +1,6 @@
 package com.example.biblioraapp
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -9,6 +10,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +43,19 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 
 import com.example.biblioraapp.ui.theme.BiblioraAppTheme
@@ -53,7 +67,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BiblioraAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize()
+                    .background(Color.White)) { innerPadding ->
                    Main()
                 }
             }
@@ -64,19 +79,85 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Main(viewModel: ViewModelBook = viewModel()) {
 
-
-
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "bookList") {
+        composable("bookList") {
+            BookListScreen(navController = navController)
+        }
+        composable("bookDetails/{bookId}") { backStackEntry ->
+            val bookId = backStackEntry.arguments?.getString("bookId")?.toInt() ?: 0
+            BookDetailsScreen(bookId = bookId, navController = navController)
+        }
+    }
+/*
     val booksList by viewModel.books.collectAsState()
 
     LazyColumn(modifier = Modifier.padding(16.dp)) {
         items(booksList) { book ->
             BookCard(book)
         }
+    }*/
+}
+
+@Composable
+fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navController: NavController) {
+    val book = viewModel.books.collectAsState().value.find { it.id == bookId }
+
+    if (book == null) {
+        Text(text = "Book not found")
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(top = 25.dp)
+                .background(Color.White)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                IconButton(onClick = { navController.navigate("bookList") }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Bak",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+            Column(modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,  // Center the text
+                verticalArrangement = Arrangement.Center)
+                 {
+                Image(
+                    painter = painterResource(R.drawable.dune),
+                    contentDescription = "Dune",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
+                        .height(600.dp)
+                        .width(5.dp)
+                )
+                Text(text = book.title, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(4.dp))
+                Text(text = "${book.year}", style = MaterialTheme.typography.titleLarge)
+                Text(text = book.description, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding( 15.dp))
+            }
+        }
     }
 }
 
 @Composable
-fun BookCard(book: Book) {
+fun BookListScreen(navController: NavController, viewModel: ViewModelBook = viewModel()) {
+    val booksList by viewModel.books.collectAsState()
+
+    LazyColumn(modifier = Modifier.padding(16.dp)) {
+        items(booksList) { book ->
+            BookCard(book = book, navController = navController)
+        }
+    }
+}
+
+@Composable
+fun BookCard(book: Book, navController: NavController) {
 
     var isClicked by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
@@ -91,20 +172,21 @@ fun BookCard(book: Book) {
 
     Card(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(0.dp)
             .fillMaxWidth()
             .clickable(
-                onClick = { isClicked = !isClicked },
+                onClick = { isClicked = !isClicked
+                    navController.navigate("bookDetails/${book.id}")
+                          },
 
             ),
-        elevation = CardDefaults.elevatedCardElevation(4.dp),
-        colors =  CardDefaults.cardColors(Color.LightGray.copy(alpha = alpha)) // Change color to provide better feedback
+        elevation = CardDefaults.elevatedCardElevation(4.dp)
     ) {
 
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(0.dp)) {
             Box(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(0.dp)
                     .graphicsLayer(
                         scaleX = scale,
                         scaleY = scale
@@ -115,10 +197,9 @@ fun BookCard(book: Book) {
                 contentDescription = "Dune",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp))}
-           Text(text = book.title)
-            Text(text = "${book.year}")
-            Text(text = book.description)
+                    .height(600.dp)
+                    .width(10.dp)
+            )}
         }
 
     }
