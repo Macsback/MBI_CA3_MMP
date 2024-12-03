@@ -62,6 +62,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.R
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
@@ -249,7 +250,9 @@ fun KonfettiUI(viewModel: KonfettiViewModel = KonfettiViewModel()) {
                     viewModel.rain()
                     isButtonEnabled = false
                 },
-                enabled = isButtonEnabled
+                enabled = isButtonEnabled,
+                colors = ButtonDefaults.buttonColors(containerColor = if (isButtonEnabled) Color.hsl(270f, .65f, .70f) else Color.Gray)
+
             ) {
                 if(isButtonEnabled){
                     Text(
