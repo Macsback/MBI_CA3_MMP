@@ -79,7 +79,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
 
 
-    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
 
     // Compose ViewModel integration
     implementation (libs.lifecycle.viewmodel.compose)

@@ -146,10 +146,12 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
 
 
             }
+
             Column(modifier = Modifier.padding(25.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center)
                  {
+
 
                 Image(
                     painter = painterResource(book.imageResourceId),
@@ -164,9 +166,9 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
                 Text(text = "${book.year}", style = MaterialTheme.typography.titleLarge)
                 Text(text = book.description, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding( 15.dp))
 
-                     KonfettiUI()
-            }
-        }
+            KonfettiUI()
+
+        }}
     }
 }
 
