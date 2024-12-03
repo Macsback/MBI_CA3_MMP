@@ -100,7 +100,7 @@ class Presets {
                     angle = Angle.BOTTOM,
                     spread = Spread.ROUND,
                     colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
-                    emitter = Emitter(duration = 5, TimeUnit.SECONDS).perSecond(100),
+                    emitter = Emitter(duration = 1, TimeUnit.SECONDS).perSecond(100),
                     position = Position.Relative(0.0, 0.0).between(Position.Relative(1.0, 0.0))
                 )
             )
@@ -164,3 +164,4 @@ class KonfettiViewModel : ViewModel() {
         object Idle : State()
     }
 }
+
