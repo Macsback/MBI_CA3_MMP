@@ -1,11 +1,12 @@
 package com.example.biblioraapp
-
+// Using Konfetti Library https://github.com/DanielMartinus/Konfetti
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -52,10 +53,27 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.R
+import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
+import nl.dionsegijn.konfetti.compose.KonfettiView
+import nl.dionsegijn.konfetti.compose.OnParticleSystemUpdateListener
+import nl.dionsegijn.konfetti.core.PartySystem
+import nl.dionsegijn.konfetti.core.models.Shape
 
 
 import com.example.biblioraapp.ui.theme.BiblioraAppTheme
@@ -127,23 +145,25 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
 
 
             }
-            Column(modifier = Modifier.padding(16.dp),
+            Column(modifier = Modifier.padding(25.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center)
                  {
 
                 Image(
                     painter = painterResource(book.imageResourceId),
-                    contentDescription = "Dune",
+                    contentDescription = book.title,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
-                        .height(600.dp)
+                        .padding(top = 20.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)
+                        .height(500.dp)
                         .width(5.dp)
                 )
-                Text(text = book.title, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(4.dp))
+                Text(text = book.title, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(0.dp))
                 Text(text = "${book.year}", style = MaterialTheme.typography.titleLarge)
                 Text(text = book.description, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding( 15.dp))
+
+                     KonfettiUI()
             }
         }
     }
@@ -208,11 +228,62 @@ fun BookCard(book: Book, navController: NavController) {
                     .height(600.dp)
                     .width(10.dp)
             )}
+
+
         }
 
     }
 }
 
+@Composable
+fun KonfettiUI(viewModel: KonfettiViewModel = KonfettiViewModel()) {
+    var isButtonEnabled by rememberSaveable { mutableStateOf(true) }
+    val state: KonfettiViewModel.State by viewModel.state.observeAsState(
+        KonfettiViewModel.State.Idle,
+    )
+
+    when (val newState = state) {
+        KonfettiViewModel.State.Idle -> {
+            Button(
+                onClick = {
+                    viewModel.rain()
+                    isButtonEnabled = false
+                },
+                enabled = isButtonEnabled
+            ) {
+                if(isButtonEnabled){
+                    Text(
+                        text = "I've Finished this book",
+                        modifier = Modifier.padding(10.dp),
+                        fontSize = 20.sp
+                    )
+                }else{
+                Text(
+                    text = "You've Finished this Book",
+                    modifier = Modifier.padding(10.dp),
+                    fontSize = 20.sp
+                )
+            }}
+        }
+        is KonfettiViewModel.State.Started -> {
+            KonfettiView(
+                modifier = Modifier.fillMaxSize(),
+                parties = newState.party,
+                updateListener = object : OnParticleSystemUpdateListener {
+                    override fun onParticleSystemEnded(
+                        system: PartySystem,
+                        activeSystems: Int
+                    ) {
+                        if (activeSystems == 0) {
+                            viewModel.ended()
+
+                        }
+                    }
+                }
+            )
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

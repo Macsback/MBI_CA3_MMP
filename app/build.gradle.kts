@@ -74,6 +74,16 @@ dependencies {
     implementation (libs.gson.v288)
     implementation (libs.kotlinx.coroutines.android.v152)
 
+    implementation (libs.konfetti.compose)
+    implementation(libs.androidx.appcompat.resources)
+    implementation(libs.androidx.runtime.livedata)
+
+
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+
+    // Compose ViewModel integration
+    implementation (libs.lifecycle.viewmodel.compose)
+
 
     testImplementation(libs.junit)
 
