@@ -4,7 +4,7 @@ package com.example.databaseapplibrary
 
     object DataSource {
         val books = listOf(
-            Book("Dune", 1968,  "link"),
+            Book("Dune", 1968,  "https://images.unsplash.com/photo-1448346325971-67fa7313079a?q=80&w=2721&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
             Book("Babel", 2022,  "R.drawable.babel"),
             Book("Percy Jackson", 2005,  "R.drawable.pj"),
             Book( "Lord of the Rings", 1988, "R.drawable.lotr"),
