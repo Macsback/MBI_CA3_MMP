@@ -141,77 +141,157 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
     if (book == null) {
         Text(text = "Book not found")
     } else {
-        Column(
-            modifier = Modifier.padding(top = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
+        BoxWithConstraints {
+            if (maxWidth < 400.dp) {
+
+                Column(
+                    modifier = Modifier.padding(top = 18.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(5.dp),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
 
 
-            ) {
-            IconButton(onClick = { navController.navigate("bookList") }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.primary,
+                        ) {
+                        IconButton(onClick = { navController.navigate("bookList") }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = MaterialTheme.colorScheme.primary,
 
+                                )
+                        }
+
+                        Text(
+                            text = "Your Books",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontFamily = FontFamily.Serif,
+                            fontSize = 20.sp
+                        )
+
+                    }
+
+                    Column(
+                        modifier = Modifier.padding(10.dp, top = 0.dp)
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     )
-            }
-
-            Text(
-                text = "Your Books",
-                style = MaterialTheme.typography.headlineMedium,
-                fontFamily = FontFamily.Serif
-            )
-
-        }
-
-        Column(
-            modifier = Modifier.padding(20.dp, top = 0.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        )
-        {
-            Log.i("DetailsScreen", "Image Loading...");
-            Image(
-                painter = rememberAsyncImagePainter(book.imageResourceId),
-                contentDescription = book.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
-                    .height(550.dp)
-                    .width(10.dp),
+                    {
+                        Log.i("DetailsScreen", "Image Loading...");
+                        Image(
+                            painter = rememberAsyncImagePainter(book.imageResourceId),
+                            contentDescription = book.title,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
+                                .height(400.dp)
+                                .width(10.dp),
 
 
+                            )
+                        Text(
+                            text = book.title,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(top = 10.dp),
+                            fontFamily = FontFamily.Serif,
+                            fontSize = 30.sp
+                        )
+                        Text(
+                            text = "${book.year}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 18.sp
+                        )
+                        Text(
+
+                            text = book.description,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(20.dp).fillMaxWidth(),
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Center
+                        )
+
+                        KonfettiUI()
+
+                    }
+                }
+            } else {
+            Column(
+                modifier = Modifier.padding(top = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+
+
+                    ) {
+                    IconButton(onClick = { navController.navigate("bookList") }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.primary,
+
+                            )
+                    }
+
+                    Text(
+                        text = "Your Books",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontFamily = FontFamily.Serif
+                    )
+
+                }
+
+                Column(
+                    modifier = Modifier.padding(20.dp, top = 0.dp)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 )
-            Text(
-                text = book.title,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top = 10.dp),
-                fontFamily = FontFamily.Serif,
-                fontSize = 36.sp
-            )
-            Text(
-                text = "${book.year}",
-                style = MaterialTheme.typography.bodyLarge,
-                fontSize = 26.sp
-            )
-            Text(
+                {
+                    Log.i("DetailsScreen", "Image Loading...");
+                    Image(
+                        painter = rememberAsyncImagePainter(book.imageResourceId),
+                        contentDescription = book.title,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
+                            .height(550.dp)
+                            .width(10.dp),
 
-                text = book.description,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(15.dp).fillMaxWidth(),
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center
-            )
 
-            KonfettiUI()
+                        )
+                    Text(
+                        text = book.title,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 10.dp),
+                        fontFamily = FontFamily.Serif,
+                        fontSize = 36.sp
+                    )
+                    Text(
+                        text = "${book.year}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 26.sp
+                    )
+                    Text(
 
+                        text = book.description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(15.dp).fillMaxWidth(),
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
+
+                    KonfettiUI()
+
+                }
+            }
         }
     }
 }
@@ -225,7 +305,7 @@ fun BookListScreen(navController: NavController, viewModel: ViewModelBook = view
     BoxWithConstraints {
         if(maxWidth<400.dp) {
             Column(
-                modifier = Modifier.padding(top=20.dp),
+
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -254,6 +334,7 @@ fun BookListScreen(navController: NavController, viewModel: ViewModelBook = view
                 }
             }
         }else{  Column(
+
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -288,7 +369,7 @@ fun BookCard(book: Book, navController: NavController) {
     var isClicked by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         targetValue = if (isClicked) 1.2f else 1f,
-        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
     )
 
 
@@ -304,7 +385,7 @@ fun BookCard(book: Book, navController: NavController) {
 
             )
             .background(Color.White),
-        elevation = CardDefaults.elevatedCardElevation(4.dp)
+
     ) {
 
         Column(modifier = Modifier.padding(5.dp)) {
