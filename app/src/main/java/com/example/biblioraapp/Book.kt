@@ -7,4 +7,4 @@ data class Book(val id: Int,
                 val title: String,
                 val year: Int,
                 val description: String,
-                @DrawableRes val imageResourceId: Int)
+                 val imageResourceId: String)

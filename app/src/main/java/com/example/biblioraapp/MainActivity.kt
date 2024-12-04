@@ -67,10 +67,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.layout.ContentScale
 
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.compose.OnParticleSystemUpdateListener
 import nl.dionsegijn.konfetti.core.PartySystem
@@ -152,15 +154,16 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
                 verticalArrangement = Arrangement.Center)
                  {
 
-
+                     Log.i("DetailsScreen", "Image Loading..." );
                 Image(
-                    painter = painterResource(book.imageResourceId),
+                    painter =  rememberAsyncImagePainter(book.imageResourceId),
                     contentDescription = book.title,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 20.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)
-                        .height(500.dp)
+                        .height(480.dp)
                         .width(5.dp)
+
                 )
                 Text(text = book.title, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(0.dp))
                 Text(text = "${book.year}", style = MaterialTheme.typography.titleLarge)
@@ -179,7 +182,7 @@ fun BookListScreen(navController: NavController, viewModel: ViewModelBook = view
         verticalArrangement = Arrangement.Center) {
         Text(text = "Your Books", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.padding(top=20.dp))
         LazyColumn(modifier = Modifier.padding(16.dp)) {
-
+            Log.i("BookScreen", "Loading Items..." );
             items(booksList) { book ->
                 BookCard(book = book, navController = navController)
             }
@@ -210,26 +213,30 @@ fun BookCard(book: Book, navController: NavController) {
                     navController.navigate("bookDetails/${book.id}")
                           },
 
-            ),
+            )
+            .background(Color.White),
         elevation = CardDefaults.elevatedCardElevation(4.dp)
     ) {
 
-        Column(modifier = Modifier.padding(0.dp)) {
+        Column(modifier = Modifier.padding(5.dp)) {
             Box(
                 modifier = Modifier
                     .padding(0.dp)
                     .graphicsLayer(
                         scaleX = scale,
                         scaleY = scale
-                    )
+                    ).background(Color.White)
             ) {
+                Log.i("BookScreen", "Image Loading..." );
             Image(
-                painter = painterResource(book.imageResourceId),
+                painter = rememberAsyncImagePainter(book.imageResourceId),
                 contentDescription = "Dune",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(600.dp)
                     .width(10.dp)
+                    .background(Color.White),
+                contentScale = ContentScale.Crop
             )}
 
 
