@@ -1,8 +1,11 @@
 package com.example.biblioraapp
 // Using Konfetti Library https://github.com/DanielMartinus/Konfetti
 import android.annotation.SuppressLint
+import android.graphics.Paint.Align
+import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Bundle
 import android.util.Log
+import android.view.RoundedCorner
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -61,15 +64,24 @@ import androidx.navigation.compose.rememberNavController
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.R
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
 
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -80,6 +92,7 @@ import nl.dionsegijn.konfetti.core.models.Shape
 
 
 import com.example.biblioraapp.ui.theme.BiblioraAppTheme
+import kotlin.math.ceil
 
 
 class MainActivity : ComponentActivity() {
@@ -128,65 +141,144 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
     if (book == null) {
         Text(text = "Book not found")
     } else {
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(top = 25.dp)
-                .background(Color.White)
+        Column(
+            modifier = Modifier.padding(top = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(10.dp),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+
+
             ) {
-                IconButton(onClick = { navController.navigate("bookList") }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Bak",
-                        tint = MaterialTheme.colorScheme.primary
+            IconButton(onClick = { navController.navigate("bookList") }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.primary,
+
                     )
-                }
-
-
             }
 
-            Column(modifier = Modifier.padding(25.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center)
-                 {
+            Text(
+                text = "Your Books",
+                style = MaterialTheme.typography.headlineMedium,
+                fontFamily = FontFamily.Serif
+            )
 
-                     Log.i("DetailsScreen", "Image Loading..." );
-                Image(
-                    painter =  rememberAsyncImagePainter(book.imageResourceId),
-                    contentDescription = book.title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 20.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)
-                        .height(480.dp)
-                        .width(5.dp)
+        }
+
+        Column(
+            modifier = Modifier.padding(20.dp, top = 0.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        )
+        {
+            Log.i("DetailsScreen", "Image Loading...");
+            Image(
+                painter = rememberAsyncImagePainter(book.imageResourceId),
+                contentDescription = book.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
+                    .height(550.dp)
+                    .width(10.dp),
+
 
                 )
-                Text(text = book.title, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(0.dp))
-                Text(text = "${book.year}", style = MaterialTheme.typography.titleLarge)
-                Text(text = book.description, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding( 15.dp))
+            Text(
+                text = book.title,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(top = 10.dp),
+                fontFamily = FontFamily.Serif,
+                fontSize = 36.sp
+            )
+            Text(
+                text = "${book.year}",
+                style = MaterialTheme.typography.bodyLarge,
+                fontSize = 26.sp
+            )
+            Text(
+
+                text = book.description,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(15.dp).fillMaxWidth(),
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
 
             KonfettiUI()
 
-        }}
+        }
     }
 }
+        }
+
+
 
 @Composable
 fun BookListScreen(navController: NavController, viewModel: ViewModelBook = viewModel()) {
     val booksList by viewModel.books.collectAsState()
-    Column( horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center) {
-        Text(text = "Your Books", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.padding(top=20.dp))
-        LazyColumn(modifier = Modifier.padding(16.dp)) {
-            Log.i("BookScreen", "Loading Items..." );
-            items(booksList) { book ->
-                BookCard(book = book, navController = navController)
+    BoxWithConstraints {
+        if(maxWidth<400.dp) {
+            Column(
+                modifier = Modifier.padding(top=20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .background(Color.hsl(270f, .65f, .70f))
+                        .height(70.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+
+                ) {
+                Text(
+                    text = "Your Books",
+                    fontFamily = FontFamily.Serif,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(top = 0.dp),
+                    color = Color.White
+
+
+                )}
+                LazyColumn(modifier = Modifier.padding(10.dp)) {
+                    Log.i("BookScreen", "Loading Items...");
+                    items(booksList) { book ->
+                        BookCard(book = book, navController = navController)
+                    }
+                }
             }
-        }
+        }else{  Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .background(Color.hsl(270f, .65f, .70f))
+                    .height(70.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+
+            ) {
+            Text(
+                text = "Your Books",
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(top = 20.dp),
+                color = Color.White,
+                fontFamily = FontFamily.Serif
+            )}
+            LazyColumn(modifier = Modifier.padding(0.dp)) {
+                Log.i("BookScreen", "Loading Items...");
+                items(booksList) { book ->
+                    BookCard(book = book, navController = navController)
+                }
+            }
+        }}
     }
 }
 
@@ -199,10 +291,7 @@ fun BookCard(book: Book, navController: NavController) {
         animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
     )
 
-    val alpha by animateFloatAsState(
-        targetValue = if (isClicked) 1f else 0.8f,
-        animationSpec = tween(durationMillis = 300)
-    )
+
 
     Card(
         modifier = Modifier
@@ -219,7 +308,7 @@ fun BookCard(book: Book, navController: NavController) {
     ) {
 
         Column(modifier = Modifier.padding(5.dp)) {
-            Box(
+            BoxWithConstraints (
                 modifier = Modifier
                     .padding(0.dp)
                     .graphicsLayer(
@@ -227,17 +316,38 @@ fun BookCard(book: Book, navController: NavController) {
                         scaleY = scale
                     ).background(Color.White)
             ) {
-                Log.i("BookScreen", "Image Loading..." );
-            Image(
-                painter = rememberAsyncImagePainter(book.imageResourceId),
-                contentDescription = "Dune",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(600.dp)
-                    .width(10.dp)
-                    .background(Color.White),
-                contentScale = ContentScale.Crop
-            )}
+                Log.i("BookScreen", "Image Loading..." )
+                if(maxWidth < 400.dp) {
+
+                    Image(
+                        painter = rememberAsyncImagePainter(book.imageResourceId),
+                        contentDescription = "Dune",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(450.dp)
+                            .width(1.dp)
+                            .background(Color.White)
+                            .clip(RectangleShape),
+                       //contentScale = ContentScale.Crop
+
+                    )
+
+                }  else{
+
+                    Image(
+                        painter = rememberAsyncImagePainter(book.imageResourceId),
+                        contentDescription = "Dune",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(600.dp)
+                            .width(10.dp)
+                            .background(Color.White)
+                            .clip(RectangleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+            }
 
 
         }
@@ -260,7 +370,8 @@ fun KonfettiUI(viewModel: KonfettiViewModel = KonfettiViewModel()) {
                     isButtonEnabled = false
                 },
                 enabled = isButtonEnabled,
-                colors = ButtonDefaults.buttonColors(containerColor = if (isButtonEnabled) Color.hsl(270f, .65f, .70f) else Color.Gray)
+                colors = ButtonDefaults.buttonColors(containerColor = if (isButtonEnabled) Color.hsl(270f, .65f, .70f) else Color.Gray),
+                modifier = Modifier.padding(10.dp, bottom = 20.dp)
 
             ) {
                 if(isButtonEnabled){
