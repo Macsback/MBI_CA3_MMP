@@ -145,12 +145,13 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
             if (maxWidth < 400.dp) {
 
                 Column(
-                    modifier = Modifier.padding(top = 18.dp),
+                    modifier = Modifier.padding(top = 0.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(5.dp),
+                        modifier = Modifier.fillMaxWidth().padding(5.dp, top = 20.dp)
+                            .height(50.dp).background(Color.hsl(251f, .13f, .50f,.08f)),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically,
 
@@ -187,7 +188,7 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
                             contentDescription = book.title,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
+                                .padding(10.dp, bottom = 0.dp, top=10.dp)
                                 .height(400.dp)
                                 .width(10.dp),
 
@@ -198,7 +199,7 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(top = 10.dp),
                             fontFamily = FontFamily.Serif,
-                            fontSize = 30.sp
+                            fontSize = 25.sp
                         )
                         Text(
                             text = "${book.year}",
@@ -225,7 +226,7 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
                 verticalArrangement = Arrangement.Center
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    modifier = Modifier.fillMaxWidth().padding(10.dp, bottom = 0.dp).height(70.dp).background(Color.hsl(251f, .13f, .50f,.08f)),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
 
@@ -261,9 +262,9 @@ fun BookDetailsScreen(bookId: Int, viewModel: ViewModelBook = viewModel(), navCo
                         contentDescription = book.title,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
+                            .padding(top = 20.dp, bottom = 0.dp)
                             .height(550.dp)
-                            .width(10.dp),
+                            .width(8.dp),
 
 
                         )
